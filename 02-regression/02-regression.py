@@ -234,7 +234,6 @@ def prepare_X (df):
     return X
 
 X_train = prepare_X(df_train)
-X_train = prepare_X(df_train)
 w0, w = train_linear_regression(X_train, y_train)
 
 X_val = prepare_X(df_val)
@@ -249,3 +248,119 @@ print (rmse(y_val, y_pred))
 
 print ("\n\n\n")
 print ("### 2.12 Categorical Variables")
+
+# all values that are not numbers, but number of doors e.g. are also categorical
+
+categorical_values = ["make", "engine_fuel_type","transmission_type","driven_wheels","number_of_doors","vehicle_size","vehicle_style"]    
+categories = {}
+
+for c in categorical_values:
+    categories[c] = list(df[c].value_counts().head().index)
+print (categories)
+
+def prepare_X (df):
+    df = df.copy()
+    features = base.copy()
+
+    df['age'] = 2017 - df.year # 2017 is newest, so 0 would be new and big value old
+    features.append('age')
+
+    #for v in [2, 3, 4]:
+    #    df['num_doors_%s' % v] = (df.number_of_doors == v).astype('int')
+    #    features.append('num_doors_%s' % v)
+
+    for c,values in categories.items():
+        for v in values:
+            df['%s_%s' % (c,v)] = (df[c] == v).astype('int')
+            features.append('%s_%s' % (c,v))
+
+    #makes = list (df.make.value_counts().head().index)
+    #for v in makes:
+    #    df['make_%s' % v] = (df.make == v).astype('int')
+    #    features.append('make_%s' % v)
+    df_num = df[features]
+    df_num = df_num.fillna(0)
+    X = df_num.values
+    return X
+
+X_train = prepare_X(df_train)
+w0, w = train_linear_regression(X_train, y_train)
+
+X_val = prepare_X(df_val)
+y_pred = w0 + X_val.dot(w)
+print (rmse(y_val, y_pred))
+
+#now it got very large number. SOmething went wrong.
+# and also the weights are very high, w0 and w
+
+
+print ("\n\n\n")
+print ("### 2.13 Regularization")
+
+#sometimes, columns of X could be duplicated so the X.T.dot(X) hase the same values and we want to inert the matrix, it doe snot exist.
+#in our case it is not the same but it could be because we have not clean numbers like 1, could be tat we have 1.000001 and that is enogh but makes the regression bad because the wegiths become huge
+# Regularization is basically controling that eeights dont grow a lot.
+# to do that we can:
+
+
+def train_linear_regression_reg(X, y, r=0.001):
+    X = np.array(X) # makes list of list intro matrix
+    ones = np.ones(X.shape[0])
+#to add the bias term
+    X =  np.column_stack([ones, X])
+    XTX = X.T.dot(X)
+    XTX = XTX + r * np.eye(XTX.shape[0])  #<--------
+    XTX_inv = np.linalg.inv(XTX)
+    w_full = XTX_inv.dot(X.T).dot(y)
+    return w_full[0], w_full[1:]
+
+
+X_train = prepare_X(df_train)
+w0, w = train_linear_regression_reg(X_train, y_train)
+
+X_val = prepare_X(df_val)
+y_pred = w0 + X_val.dot(w)
+print (rmse(y_val, y_pred))
+# now we get a big improvement
+
+print ("\n\n\n")
+print ("### 2.14 Tunning the model")
+for r in [0.0, 0.00001, 0.0001, 0.001, 0.1, 1, 10]:
+    X_train = prepare_X(df_train)
+    w0, w = train_linear_regression_reg(X_train, y_train, r)
+
+    X_val = prepare_X(df_val)
+    y_pred = w0 + X_val.dot(w)
+    score = rmse(y_val, y_pred)
+    print (r, w0, score)
+
+# we can choose 0.001 for example, that has the lowest score
+
+
+print ("\n\n\n")
+print ("### 2.15 Using the model")
+df_full_train = pd.concat([df_train, df_val])
+df_full_train = df_full_train.reset_index(drop = True)
+X_full_train = prepare_X(df_full_train)
+y_full_train = np.concatenate([y_train, y_val])
+w0, w = train_linear_regression_reg(X_full_train, y_full_train, r=0.001)
+X_test = prepare_X(df_test)
+y_pred = w0 + X_test.dot(w)
+score = rmse(y_test,y_pred)
+print (score)
+# the score does not go lower, but it is a good sign because it can generalize well.
+
+#now lets use the model
+
+car = df_test.iloc[20].to_dict()
+print (car)
+
+df_small = pd.DataFrame([car])
+X_small = prepare_X(df_small)
+y_pred = w0 + X_small.dot(w)
+print (np.expm1(y_pred))
+
+#real price:
+print (np.expm1(y_test[20]))
+
+
