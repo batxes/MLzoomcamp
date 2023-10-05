@@ -81,29 +81,62 @@ from sklearn.feature_extraction import DictVectorizer
 dv = DictVectorizer(sparse=False) 
 train_dicts = df_train[categorical+numerical].to_dict(orient='records')
 X_train = dv.fit_transform(train_dicts) # we can do both steps above in 1
-dv = DictVectorizer(sparse=False) 
 val_dicts = df_val[categorical+numerical].to_dict(orient='records')
-X_val = dv.fit_transform(val_dicts) 
+X_val = dv.transform(val_dicts)  # here we do not fit
 
 from sklearn.linear_model import LogisticRegression
 
 model = LogisticRegression(solver='liblinear', C=10, max_iter=1000, random_state=42)
 model.fit(X_train, y_train)
 
-print ("asdadasda")
-
 y_pred = model.predict(X_val)
-print (y_pred)
+print ((y_val == y_pred).mean()) 
+final_score = (y_val == y_pred).mean()
 
-# to see how accurate our predicitons are:
-# how much of these are the same?
-print (y_val)
-print (churn_decision.astype(int))
-print ((y_val == churn_decision).mean()) #80% pretty good
+print ("### question 05")
+print ()
+print ()
 
-df_pred = pd.DataFrame()
-df_pred['probability'] = y_pred
-df_pred['prediction'] = churn_decision.astype(int)
-df_pred['actual'] = y_val
-df_pred['correct'] = df_pred.prediction == df_pred.actual
+
+for c in categorical+numerical:
+    print ("removing {}".format(c))
+    features = categorical+numerical
+    features.remove(c)
+    train_dicts = df_train[features].to_dict(orient='records')
+    X_train = dv.fit_transform(train_dicts) # we can do both steps above in 1
+    val_dicts = df_val[features].to_dict(orient='records')
+    X_val = dv.transform(val_dicts)  # here we do not fit
+    model = LogisticRegression(solver='liblinear', C=10, max_iter=1000, random_state=42)
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_val)
+    print (final_score - (y_val == y_pred).mean()) 
+
+print ("### question 06")
+print ()
+print ()
+
+import numpy as np
+from sklearn.linear_model import Ridge
+from sklearn.metrics import mean_squared_error
+
+df_train.price = np.log10(df_train.price)
+df_val.price = np.log10(df_val.price)
+df_test.price = np.log10(df_test.price)
+y_val = df_val.price.values
+dv = DictVectorizer(sparse=False) 
+train_dicts = df_train[categorical+numerical].to_dict(orient='records')
+X_train = dv.fit_transform(train_dicts) # we can do both steps above in 1
+val_dicts = df_val[categorical+numerical].to_dict(orient='records')
+X_val = dv.transform(val_dicts)  # here we do not fit
+for alpha in [0,0.01,0.1,1,10]:
+    print ("alpha: {}".format(alpha))
+    model = Ridge(solver='sag',max_iter=1000, random_state=42, alpha=alpha)
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_val)
+    print (y_val)
+    print (y_pred)
+    rmse = mean_squared_error(y_val, y_pred, squared=False)
+    print (rmse.round(3))
+
+
 
