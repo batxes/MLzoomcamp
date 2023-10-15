@@ -4,7 +4,8 @@ from flask import request #to get information in json
 from flask import jsonify #to convert data into json
 
 
-model_file = 'model1.bin'
+#model_file = 'model1.bin'
+model_file = 'model2.bin'
 dv_file = 'dv.bin'
 
 with open(model_file, 'rb') as f_in:
