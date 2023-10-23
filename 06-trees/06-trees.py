@@ -3,8 +3,6 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-# first day: started 20:45- ended 22:00 = 1.45 minutes
-# startd again at 20:16
 
 print( "6. Decision Trees and Ensemble Learning") 
 print ()
