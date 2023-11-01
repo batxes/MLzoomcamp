@@ -1,11 +1,11 @@
 import requests
 
 #this is when we run in our machine
-url = "http://localhost:9696/predict"
+#url = "http://localhost:9696/predict"
 
 #this is for the cloud
-#host = "churn-serving-env.eba-pwhtrpxp.eu-north-1.elasticbeanstalk.com"
-#url = f"http://{host}/predict"
+host = "midterm-project-env.eba-2dbpumwm.eu-north-1.elasticbeanstalk.com"
+url = f"http://{host}/predict"
 
 day = {
  "Location":  "Albany",

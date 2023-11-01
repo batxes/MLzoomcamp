@@ -1,3 +1,4 @@
+pipenv install awsebcli --dev
 data: https://www.kaggle.com/datasets/jsphyg/weather-dataset-rattle-package
 
 First we did the notebook
@@ -34,7 +35,9 @@ pipenv install awsebcli --dev
 
 eb init -p docker -r eu-north-1 midterm_project
 
-eb create midter_project_env
+eb create midterm-project-env
+
+now, I need to change the fisrt lines of test.py and run it
 
 
 
