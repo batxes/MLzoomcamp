@@ -1,4 +1,4 @@
-# Midtern project: Rain prediction![Kangaroos in the rain](https://github.com/batxes/MLzoomcamp/midterm_project/kangaroos.jpg)
+# Midtern project: Rain prediction![Kangaroos in the rain](https://github.com/batxes/MLzoomcamp/blob/main/midterm_project/kangaroos.jpg)
 
 ## Description of the problem
 
