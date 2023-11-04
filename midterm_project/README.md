@@ -3,9 +3,15 @@
 ## Description of the problem
 
 I am very interested in **climate change** and I thought that a model which **predicts the rain** could be interesting.  
+
 For this project I downloaded a Kaggle dataset which contains 10 years of daily weather observations in Australia.  
-There are many features like humidity, temperature and wind speed, but the target variable to predict will be **RainTomorrow**, which is associated to each day and it states if it rained or not the next day.  
+
+The idea is to predict if tomorrow will be raining, depending on the observations we do today. The dataset contains information from Australia so this model will be specifically predicting if it will rain tomorrow in a specific Australian city.  
+
+The dataset contains many variables like humidity, temperature, wind speed and the target variable to predict which is **RainTomorrow**. Rain tomorrow is a variable associated to each day and it states if it rained or not for each observation in the dataset.  
+
 Training our model with all the features can help predict which type of day is the most likely that leads to a rainy tomorrow.  
+
 I hope that this kind of projects can help me develop a more sophisticated model in the future to predict other kind of events related to weather and climate change. 
 
 Link to the service:   
