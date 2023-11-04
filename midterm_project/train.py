@@ -90,8 +90,8 @@ dtest = xgb.DMatrix(X_test, feature_names=dv.get_feature_names())
 
 
 xgb_params = {
-        'eta': 0.3, #how fast it trains
-        'max_depth': 15,
+        'eta': 0.1, #how fast it trains
+        'max_depth': 20,
         'min_child_weight': 1,  #te same as min_samples_leaf
         'objective': 'binary:logistic', #becasue we have a binary class type
         'eval_metric':'auc',
@@ -99,7 +99,7 @@ xgb_params = {
         'seed': 1,
         'verbosity':1,
         }
-model = xgb.train(xgb_params, dfulltrain, num_boost_round=200)
+model = xgb.train(xgb_params, dfulltrain, num_boost_round=500)
 y_pred = model.predict(dtest)
 auc = roc_auc_score(y_test, y_pred)
 print (" XGBoost AUC: {}".format(auc))
