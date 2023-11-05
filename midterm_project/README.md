@@ -14,7 +14,7 @@ Training our model with all the features can help predict which type of day is t
 
 I hope that this kind of projects can help me develop a more sophisticated model in the future to predict other kind of events related to weather and climate change. 
 
-Link to the service:   
+URL to access the service: midterm-project-env.eba-myupfmwp.eu-north-1.elasticbeanstalk.com  
 Dataset link: https://www.kaggle.com/datasets/jsphyg/weather-dataset-rattle-package
 
 
@@ -36,6 +36,7 @@ Dataset link: https://www.kaggle.com/datasets/jsphyg/weather-dataset-rattle-pack
 ## Instructions on how to run the project
 I recorded a video on how to run the project. Regardless, below can be found the steps I took to carry on the project.
 ### Video
+![Prediction video](https://github.com/batxes/MLzoomcamp/blob/main/midterm_project/instructions.mp4)
 ### Instructions
 
  1. I first created a notebook called **notebook.ipynb** where I downloaded the data, explored, prepared the data, cleaned, run different models with different parameters, evaluated them and concluded which was the model that performed the best.
@@ -44,7 +45,7 @@ I recorded a video on how to run the project. Regardless, below can be found the
  4. Then I run the environment with: `pipenv shell`
  5. I run a server locally: `gunicorn --bind 0.0.0.0:9696 predict:app`
  6. I test that the model is working with: `python3 test.py`
- 7. After checking that it works, I create a **docker** container `sudo docker build -t midterm_project .` and test it again `python3 test.py`
+ 7. After checking that it works, I create a **docker** container `sudo docker build -t midterm_project .`. We can test it running the docker image and executing `python3 test.py`
  8. Finally I deploy it to **AWS** with **Elastic Beanstalk**. For that I first install the library `pipenv install awsebcli --dev`, initialize EB `eb init -p docker -r eu-north-1 midterm_project` and create the service `eb create midterm-project-env`
  9. Now we just need to test it. For that, we modify the line pointing to the url in `test.py` and run `python3 test.py`
 

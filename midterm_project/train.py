@@ -85,8 +85,8 @@ dicts_test = df_test.to_dict(orient="records")
 X_test = dv.transform(dicts_test)
 
 #for XGboost
-dfulltrain = xgb.DMatrix(X_full_train, label=y_full_train, feature_names=dv.get_feature_names())
-dtest = xgb.DMatrix(X_test, feature_names=dv.get_feature_names())
+dfulltrain = xgb.DMatrix(X_full_train, label=y_full_train, feature_names=list(dv.get_feature_names_out()))
+dtest = xgb.DMatrix(X_test, feature_names=list(dv.get_feature_names_out()))
 
 
 xgb_params = {
