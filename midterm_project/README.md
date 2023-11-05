@@ -51,7 +51,7 @@ I recorded a video on how to run the project. Regardless, below can be found the
  6. I test that the model is working with: `python3 test.py`
  7. After checking that it works, I create a **docker** container `sudo docker build -t midterm_project .`. We can test it running the docker image `docker run -it --rm  midterm_project` and executing `python3 test.py`
  8. Finally I deploy it to **AWS** with **Elastic Beanstalk**. For that I first install the library `pipenv install awsebcli --dev`, initialize EB `eb init -p docker -r eu-north-1 midterm_project` and create the service `eb create midterm-project-env`
- 9. Now we just need to test it. For that, we modify the line pointing to the url in `test.py` and run `python3 test.py`
+ 9. Now we just need to test it. For that, I modified the line pointing to the url in `test.py` and run `python3 test.py`. (There is no need to change it now since the server is still running in AWS (today being 5 November 2023))
 
 
 
