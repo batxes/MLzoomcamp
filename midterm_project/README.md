@@ -1,10 +1,13 @@
 # Midtern project: Rain prediction![Kangaroos in the rain](https://github.com/batxes/MLzoomcamp/blob/main/midterm_project/kangaroos.jpg)
 
-## Description of the problem
+## About the project
 
+This is a Machine Learning project that aims to predict the wather.  
 I am very interested in **climate change** and I thought that a model which **predicts the rain** could be interesting.  
-
 For this project I downloaded a Kaggle dataset which contains 10 years of daily weather observations in Australia.  
+I hope that this kind of projects can help me develop a more sophisticated model in the future to predict other kind of events related to weather and climate change. 
+
+## Description of the problem
 
 The idea is to predict if tomorrow will be raining, depending on the observations we do today. The dataset contains information from Australia so this model will be specifically predicting if it will rain tomorrow in a specific Australian city.  
 
@@ -12,11 +15,13 @@ The dataset contains many variables like humidity, temperature, wind speed and t
 
 Training our model with all the features can help predict which type of day is the most likely that leads to a rainy tomorrow.  
 
-I hope that this kind of projects can help me develop a more sophisticated model in the future to predict other kind of events related to weather and climate change. 
-
 URL to access the service: midterm-project-env.eba-myupfmwp.eu-north-1.elasticbeanstalk.com  
 Dataset link: https://www.kaggle.com/datasets/jsphyg/weather-dataset-rattle-package
 
+## About the Model
+
+The model is trained with Gradient Boosting algorithm in a dataset composed of 145460 observations. 
+The dataset was last updated 3 years ago.
 
 ## Repository contains
 
@@ -34,14 +39,14 @@ Dataset link: https://www.kaggle.com/datasets/jsphyg/weather-dataset-rattle-pack
  
 
 ## Instructions on how to run the project
-I recorded a video on how to run the project. Regardless, below can be found the steps I took to carry on the project.
+I recorded a video on how to run the project. 
 ### Video
 
 [![Instructions video](https://img.youtube.com/vi/rLU9D3jbrng/maxresdefault.jpg)](https://youtu.be/rLU9D3jbrng)
 
 
 
-### Instructions
+### Instructions and code of the work carried out
 
  1. I first created a notebook called **notebook.ipynb** where I downloaded the data, explored, prepared the data, cleaned, run different models with different parameters, evaluated them and concluded which was the model that performed the best.
  2. Then I generated the **train.py** script that trains the models and saves the model to a file with pickle, the **predict.py** file that loads the model and serves it and the **test.py** script that will be used to predict a specific day.
