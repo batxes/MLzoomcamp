@@ -36,7 +36,11 @@ Dataset link: https://www.kaggle.com/datasets/jsphyg/weather-dataset-rattle-pack
 ## Instructions on how to run the project
 I recorded a video on how to run the project. Regardless, below can be found the steps I took to carry on the project.
 ### Video
-![Prediction video](https://github.com/batxes/MLzoomcamp/blob/main/midterm_project/instructions.mp4)
+
+[![Instructions video](https://img.youtube.com/vi/rLU9D3jbrng/maxresdefault.jpg)](https://youtu.be/rLU9D3jbrng)
+
+
+
 ### Instructions
 
  1. I first created a notebook called **notebook.ipynb** where I downloaded the data, explored, prepared the data, cleaned, run different models with different parameters, evaluated them and concluded which was the model that performed the best.
@@ -45,9 +49,14 @@ I recorded a video on how to run the project. Regardless, below can be found the
  4. Then I run the environment with: `pipenv shell`
  5. I run a server locally: `gunicorn --bind 0.0.0.0:9696 predict:app`
  6. I test that the model is working with: `python3 test.py`
- 7. After checking that it works, I create a **docker** container `sudo docker build -t midterm_project .`. We can test it running the docker image and executing `python3 test.py`
+ 7. After checking that it works, I create a **docker** container `sudo docker build -t midterm_project .`. We can test it running the docker image `docker run -it --rm  midterm_project` and executing `python3 test.py`
  8. Finally I deploy it to **AWS** with **Elastic Beanstalk**. For that I first install the library `pipenv install awsebcli --dev`, initialize EB `eb init -p docker -r eu-north-1 midterm_project` and create the service `eb create midterm-project-env`
- 9. Now we just need to test it. For that, we modify the line pointing to the url in `test.py` and run `python3 test.py`
+ 9. Now we just need to test it. For that, I modified the line pointing to the url in `test.py` and run `python3 test.py`. (There is no need to change it now since the server is still running in AWS (today being 5 November 2023))
 
+### Miscelanea
+I had some problems with getting the feature names from the DictVectorizer.  
+In the course we used `dv.get_feature_names()` but I got errors on my end and I had to change to `list(dv.get_feature_names_out())`.  
+After reading it looks like it has to do with different scykit versions.  
+I also read that `get_feature_names()` is being replaced to `get_feature_names_out()` in the library so I kept it like that.  
 
 
