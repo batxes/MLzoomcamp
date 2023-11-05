@@ -36,7 +36,11 @@ Dataset link: https://www.kaggle.com/datasets/jsphyg/weather-dataset-rattle-pack
 ## Instructions on how to run the project
 I recorded a video on how to run the project. Regardless, below can be found the steps I took to carry on the project.
 ### Video
-![Prediction video](https://github.com/batxes/MLzoomcamp/blob/main/midterm_project/instructions.mp4)
+
+[![Instructions video](https://img.youtube.com/vi/rLU9D3jbrng/maxresdefault.jpg)](https://youtu.be/rLU9D3jbrng)
+
+
+
 ### Instructions
 
  1. I first created a notebook called **notebook.ipynb** where I downloaded the data, explored, prepared the data, cleaned, run different models with different parameters, evaluated them and concluded which was the model that performed the best.
