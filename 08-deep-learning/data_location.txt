@@ -1,0 +1,2 @@
+clothing_dataset_small is in the root folder (not upload to github)
+it can also be found in: # first clone the dataset : git clone https://github.com/alexeygrigorev/clothing-dataset-small.git
