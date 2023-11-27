@@ -33,7 +33,10 @@ def predict(url):
                         #  and we have the result in the output
     preds = interpreter.get_tensor(output_index)
 
-    return dict(zip(classes,preds[0]))
+    float_predictions = preds[0].tolist()
+
+    #return dict(zip(classes,preds[0]))
+    return dict(zip(classes,float_predictions))
 
 # this code is necessary for lambda
 def lambda_handler(event, context):
