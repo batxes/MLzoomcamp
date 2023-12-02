@@ -46,16 +46,12 @@
 # docker build -t clothing-model .
 
 # I had a problem with docker connection to HTTPS: I managed to do this and worked;
-
 #{
 #  "dns": ["8.8.8.8", "8.8.4.4"]
 #}
 #and restart the docker service:
 #
 #sudo service docker restart
-
-# the error was:
-#WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7fd33c20fe50>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /simple/keras-image-helper/
 
 # we do not need to install in the docker image numpy and other libraries because tflite already depends on them
 
