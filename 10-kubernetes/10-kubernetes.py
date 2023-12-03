@@ -175,4 +175,87 @@ docker compose down #to stop
 # now deploy to kubernetes
 
 
+# 10.5 Introduction to Kubernetes
+
+# kubernetes.io
+# we can use kubernetes to deply docker containers. It deploys in the cloud and handles loads and other stuff making it easy for us.
+# in the cluster we have NODEs and inside Nodes we have different PODs. Pods are docker containers. DEPLOYMENTS group the same PODs, the same docker image. PODs can have more cpu or more or less RAM. Then we have Gateway service and model service. Each service is reponsible for different functions.
+
+# the gateway service is external and is the one seen. Called Load Balancer.
+# the model service is internal. Cluster IP
+# The first contact is done with the ingress, which then calls the gateway service. So this would be the entry point
+
+# when we have many clients asking for many requests, Kubernetes starts more PODs, in each deployment. SO it can balance the load and scale up or down. The thing taken care of this is the HPA, Horizontal POD autoscaler
+
+# 10.6 Deploying a Simple Service to Kubernetes
+
+# first, we will create a simple Ping application in Flask.
+# create a dir called ping, with a file called ping.py in it.
+# int the same directory, install flask and gunicorn with pipenv
+# but before get a empty Pipfile so it installes in the diretory (we have pipfile in the parent directory and then it would no install in this directory)
+touch Pipfile
+pipenv install flask gunicorn
+
+#now create a DockerFile. And build it with a tag because local kubenerte class called Kind does not like latest tag
+docker build -t ping:v001 .
+
+# and run the image
+docker run -it --rm -p 9696:9696 ping:v001
+
+# test with
+curl localhost:9696/ping
+
+# it works. Now lets deploy it to kubernetes, but we need to install a couple of things.
+
+# website: https://kubernetes.io/docs/tasks/tools/
+
+# since we will later deploy kubernetes in AWS, we can also install from this website:
+# https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html
+
+# download the binary to a folder we created in the root folder of the zoomcamp called bin
+
+sudo chmod +x kubectl
+
+# now, make kubectl callable from the $PATH
+
+# write in .bashrc: export PATH="/home/ibai/work/MLzoomcamp/bin:${PATH}"
+
+# now lets install Kind (to deploy kubernetes locally)
+# https://kind.sigs.k8s.io/docs/user/quick-start/#installation
+
+# download https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64 also in bin folder
+wget https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
+mv kind-linux-amd64 kind
+chmod +x kind
+
+#create a cluster with
+kind create cluster
+
+# now we need to configure de kubectl
+
+kubectl cluster-info --context kind-kind
+#@chekc that works with 
+kubectl get service
+kubectl get deployment
+# if this gets no error means that we have kubernetes and kind installed an ready
+
+# now lets create a deployment and a service
+# with visual-studio we can install an extension to make this easier for kubernetes
+# the extension is called kubernetes
+
+# first we create the deployment
+vim deployment.yaml # in visual studio it will create automatically if we write deployment
+
+# metadata name = deployment name
+# spec, containers, name = pod name
+# inside the template, each pod has a label
+# in the selector(deployment), all pods with app label the same, belong to this deployment
+# replica adds more pods (1 + what we wrote in the replica) to the deployment
+
+
+
+
+
+
+
 
