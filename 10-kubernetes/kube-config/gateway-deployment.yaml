@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: gateway
-        image: zoomcamp-10-gateway:002
+        image: 302181200248.dkr.ecr.eu-north-1.amazonaws.com/mlzoomcamp-image:zoomcamp-10-gateway-002
         resources:
           limits:
             memory: "128Mi"

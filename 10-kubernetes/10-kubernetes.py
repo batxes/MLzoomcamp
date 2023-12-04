@@ -380,6 +380,120 @@ kubernetes load balancing grpc
 # 10.8 Deploying to EKS
 # we will create a EKS cluster on AWS, publis the image to ECR and configure kubectl
 
+# go to AWS konsole, EKS
+# https://eu-north-1.console.aws.amazon.com/eks/home?region=eu-north-1#
+# we can create a cluster there bu instead we will use eksctl
+# https://eksctl.io/
+
+# download to bin directory
+
+# now, we can create a cluster with eksctl
+# but rather we will create a cluster.yaml in kube-config folder. Check in https://eksctl.io/getting-started/
+#then:
+eksctl create cluster -f eks-config.yaml
+
+# now we need to take our local images like gateway and tf-serving and publish them to ECR, the container service in AWS
+
+#to do that:
+aws ecr create-repository --repository-name mlzoomcamp-image
+#here, we copy the repositryUri: 
+302181200248.dkr.ecr.eu-north-1.amazonaws.com/mlzoomcamp-image
+
+#meanwhile , execute this:
+ACCOUNT_ID=302181200248
+REGION=eu-north-1
+REGISTRY_NAME=mlzoomcamp-image
+PREFIX=${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${REGISTRY_NAME}
+
+GATEWAY_LOCAL=zoomcamp-10-gateway:002
+GATEWAY_REMOTE=${PREFIX}:zoomcamp-10-gateway-002
+docker tag ${GATEWAY_LOCAL} ${GATEWAY_REMOTE}
+
+MODEL_LOCAL=zoomcamp-10-model:xception-v4-001
+MODEL_REMOTE=${PREFIX}:zoomcamp-10-model-xception-v4-001
+docker tag ${MODEL_LOCAL} ${MODEL_REMOTE}
+
+$(aws ecr get-login --no-include-email)
+
+docker push ${MODEL_REMOTE} 
+docker push ${GATEWAY_REMOTE} 
+
+#now we need to take the URI from above and put in the configuration of these docker images
+#copy echo ${GATEWAY_REMOTE} to gateway-deployment.yaml
+
+#replace
+spec:
+      containers:
+      - name: gateway
+        image: zoomcamp-10-gateway:002
+#with:
+        spec:
+      containers:
+      - name: gateway
+        image: 302181200248.dkr.ecr.eu-north-1.amazonaws.com/mlzoomcamp-image:zoomcamp-10-gateway-002
+
+# now the same with model-deployment.yaml
+
+image: zoomcamp-10-model:xception-v4-001
+# for this
+image: 302181200248.dkr.ecr.eu-north-1.amazonaws.com/mlzoomcamp-image:zoomcamp-10-model-xception-v4-001
+
+# now the EKS cluster is ready, we can check with:
+kubectl get nodes
+
+# now, lets apply all config files in kube-config to the cluster
+# enter the kube-config dir and:
+kubectl apply -f model-deployment.yaml
+kubectl apply -f model-service.yaml
+kubectl get pod # lets check the mode
+
+NAME                                         READY   STATUS    RESTARTS   AGE
+tf-serving-clothing-model-79c8fb579d-2vj5b   1/1     Running   0          37s
+
+ibai@ibai-PC:~/work/MLzoomcamp/10-kubernetes/kube-config$ kubectl get service
+NAME                        TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+kubernetes                  ClusterIP   10.100.0.1     <none>        443/TCP    13m
+tf-serving-clothing-model   ClusterIP   10.100.97.18   <none>        8500/TCP   39s
+
+#like always, we can check fist with port-forwarding:
+kubectl port-forward service/tf-serving-clothing-model 8500:8500
+
+# and the test works:
+ibai@ibai-PC:~/work/MLzoomcamp/10-kubernetes$ python3 gateway.py
+
+# now the gateways:
+kubect apply -f gateway-deployment.yaml
+kubect apply -f gateway-service.yaml
+kubectl get pod
+
+NAME                                         READY   STATUS    RESTARTS   AGE
+gateway-5d658c7b4f-dzw6r                     1/1     Running   0          41s
+tf-serving-clothing-model-79c8fb579d-2vj5b   1/1     Running   0          4m11s
+
+ibai@ibai-PC:~/work/MLzoomcamp/10-kubernetes/kube-config$ kubectl get service
+NAME                        TYPE           CLUSTER-IP      EXTERNAL-IP                                                                PORT(S)        AGE
+gateway                     LoadBalancer   10.100.14.245   ab66f9963949549608e233f64dc81530-2144541766.eu-north-1.elb.amazonaws.com   80:32419/TCP   50s
+kubernetes                  ClusterIP      10.100.0.1      <none>                                                                     443/TCP        17m
+tf-serving-clothing-model   ClusterIP      10.100.97.18    <none>                                                                     8500/TCP       4m18s
+
+# now you see we have an externalIP for the gateway
+# if we execute this line we can see it is listening:
+telnet ab66f9963949549608e233f64dc81530-2144541766.eu-north-1.elb.amazonaws.com 80
+
+#test the gateway:
+kubectl port-forward service/gateway 8080:80
+python3 test.py
+
+# it works!
+
+# now we copy he URI and paste it in the URL variable of our test.py
+url = "http://ab66f9963949549608e233f64dc81530-2144541766.eu-north-1.elb.amazonaws.com/predict"
+
+Python3 test.pt #WORKS
+
+
+# to stpo:
+eksctl delete cluster --name mlzoomcamp-eks
 
 
 
