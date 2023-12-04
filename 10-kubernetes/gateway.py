@@ -76,9 +76,9 @@ def predict_endpoint():
 
 if __name__ == '__main__':
     #this part without flask
-    #url = 'http://bit.ly/mlbookcamp-pants'
-    #response = predict(url)
-    #print (response)
+    url = 'http://bit.ly/mlbookcamp-pants'
+    response = predict(url)
+    print (response)
     #this part with flask
-    app.run(debug=True, host='0.0.0.0', port=9696)
+    #app.run(debug=True, host='0.0.0.0', port=9696)
 

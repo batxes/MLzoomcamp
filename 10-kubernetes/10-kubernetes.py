@@ -252,6 +252,142 @@ vim deployment.yaml # in visual studio it will create automatically if we write 
 # in the selector(deployment), all pods with app label the same, belong to this deployment
 # replica adds more pods (1 + what we wrote in the replica) to the deployment
 
+# lets apply this to a kubernetes cluster
+kubectl apply -f deployment.yaml
+kubectl get deployment
+kubectl get pod
+
+# we can use decribe to see what happens
+kubectl describe pod ping-deployment-86b45d75bf-7ml7l
+# we got an error. Kind needs to register the image to kubernetes, for that:
+kind load docker-image ping:v001
+
+# and now we can see is running with:
+kubectl get pod
+
+# now test the deployment locally with port forwarding
+
+kubectl port-forward ping-deployment-86b45d75bf-7ml7l 9696:9696
+# not it is forwarding the port in the host machine to the port on the deployment
+# now in another terminal
+curl localhost:9696/ping
+# this should show handling connection for 9696 from the deployment
+
+#now lets create a service
+vim service.yaml
+# medatada name = name of the service
+# selector app = which pods qualify for forwarding requests
+# targetPort = the port the container shows
+# port = service port, the one user using to communicate. 80
+
+#now create the service:
+kubectl apply -f service.yaml
+kubectl get service
+
+# the service type should be LoadBalancer
+# the external IP of the kubernetes is fine, says None, but the Load balancer which is exposed should be changed. This one will be pending forever unless we modify. When using not locallly like kind but deployend, this will be changed. Now, we can do port forwarding and act like the IP is set.
+# lets forward 8080 in our machine (80 will complain) and forward to 80 in the kubernetes
+kubectl port-forward service/ping 8080:80
+#ŧest it with:
+curl localhost:8080/ping
+
+# 10.7 Deploying TensorFlow models to kubernetes
+
+# let's create first a folder, kube-config
+mkdir kube-config
+#inside, lets get a yaml file.
+# the containerPort is 8500,for tensorflow-service listening requests
+# before deploying, we need the image to be available in kind. DO that in root directory
+kind load docker-image zoomcamp-10-model:xception-v4-001
+
+# now apply yaml in the kube-config folder
+kubectl apply -f model-deployment.yaml
+kubectl get pod # not its running. If not working make CPU smaller, like 0.5
+# if we need to remove a pod we can do:
+kubectl delete -f ../ping/deployment.yaml
+
+# to test clothing model, lets por forward again
+kubectl port-forward tf-serving-clothing-model-7f555c49b5-6skpp 8500:8500
+
+#now to test lets use gateway.py withut the flask
+python3 gateway.py
+
+#now that it works, we want to create a service for this deployment and apply
+cd kube-config
+kubectl apply -f model-service.yaml
+
+kubectl get service
+# now to test, again we can do port forwarding but now for the service
+kubectl port-forward service/tf-serving-clothing-model 8500:8500
+# and test:
+python3 gateway.py
+
+# at this time, the TF serving model is working, is ready. Now we need to deploy the gateway part
+# first, load docker image
+kind load docker-image zoomcamp-10-gateway:002
+
+# now, in kube-config create the gateway-deployment.yaml
+# we need to set the environment variable in this yaml file
+env:
+  - name: TF_SERVING_HOST
+    value: tf-serving-clothing-model.default.svc.cluster.local:8500 
+
+# the value is the name which follows a convention for kubernetes
+
+# to check that it works, we log ing to one of the pods to execute some commands in
+kubectl get pod
+kubectl exec -it ping-deployment-86b45d75bf-7ml7l -- bash
+# now we want to access the service from inside, using the url that we put in the environment value
+# first we will use curl in the pod, but we need to install it first
+apt update
+apt install curl
+# all of this in the POD, and then:
+curl localhost:9696/ping
+# now, lets go from the pod to the service and back to the pod
+curl ping.default.svc.cluster.local:80/ping
+# not, check the TF model
+# but we can not use curl because the tf-serving model does not deal with http requests.
+# to know if the model is listening we can use telnet
+# lets install it also
+telnet tf-serving-clothing-model.default.svc.cluster.local 8500
+
+# it connects and there is something listening there for requests
+
+# lets deply now, in the kube-config:
+kubectl apply -f gateway-deployment.yaml
+
+#check again
+kubectl port-forward gateway-7d74767d4b-fk657 9696:9696
+#and in another terminal check with 
+python3 test.py
+
+# now that we have the deployment, we want a service for this deployment
+vim gateway-service.yaml
+kubectl apply -f gateway-service.yaml #remember to add the type as load balance
+kubectl get service
+
+# the services are still pending for an IP: remenber in production, we would have an IP there and this IP would be the one that we would use in test.py or our python script that calls
+
+# test again:
+kubectl port-forward service/gateway 8080:80
+python3 test.py # change the localhost port from 9696 to 8080
+
+# when we deploy, we couuld have a problem that not all PODs get the same load, that is something that kubernetes with default settings does, it fails. For that google:
+kubernetes load balancing grpc
+
+#and there it says what to do (a website without TEARS, it says)
+
+# 10.8 Deploying to EKS
+# we will create a EKS cluster on AWS, publis the image to ECR and configure kubectl
+
+
+
+
+
+
+
+
+
 
 
 
