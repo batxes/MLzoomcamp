@@ -31,7 +31,7 @@ model = keras.models.load_model(model_file)
 
 print ("Model Loaded")
 
-app = Flask('classify')
+app = Flask('map')
 
 #add decorators. A way to add extra functionality
 @app.route('/classify', methods=['POST'])

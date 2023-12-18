@@ -4,7 +4,6 @@ import requests
 
 #this is when we run in our machine
 url = "http://localhost:9696/classify"
-url = "http://0.0.0.0:9696/classify"
 
 #this is for the cloud
 #host = "midterm-project-env.eba-myupfmwp.eu-north-1.elasticbeanstalk.com"

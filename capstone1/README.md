@@ -35,42 +35,40 @@ The model is convolutional neural network.
 	 - Data preparation and data cleaning
 	 - EDA and feature importance analysis
 	 - Model selection process and parameter tuning
- - **train.py**: script that trains the model and saves it to a model with **pickle**
- - **predict.py**: script that loads the model and serves it via a web service with **flask**
- - **test.py**: script that contains a possible day that is used to test the model and predict the next day.
+     - Model saving
+ - **classify.py**: script that loads the model and serves it via a web service with **flask**
+ - **test.py**: script used to test the model. It loads a image and tests.
  - **Pipfile** and **Pipfile.lock**: files with the library dependencies
  - **Dockerfile** with the instructions to build the docker image
- 
+ - **final-map-model.h5** final model
 
-## Instructions on how to run the project
-I recorded a video on how to run the project. 
-### Video
+## How to run the model
 
-[![Instructions video](https://img.youtube.com/vi/rLU9D3jbrng/maxresdefault.jpg)](https://youtu.be/rLU9D3jbrng)
-
-
+Model can be run locally in these ways:
+ 1. locally:
+    1. `pipenv shell`
+    2. `gunicorn --bind 0.0.0.0:9696 classify:app` 
+    3. in another terminal: `python3 test.py`
+ 2. Docker:
+    1. `docker build -t ml-zoomcamp-maps .`
+    2. `docker run -p 9696:9696 -it --rm  ml-zoomcamp-maps`
+    3. in another terminal: `python3 test.py`
 
 ### Instructions and code of the work carried out
-
-
- 1. I first created a notebook called **notebook.ipynb** where I downloaded the data, explored, prepared the data, cleaned, run different models with different parameters, evaluated them and concluded which was the model that performed the best. The model then is converted into tf-lite and saved.
+ 1. I first created a notebook called **notebook.ipynb** where I downloaded the data, explored, prepared the data, run models, tunned the models with different paramenters, evaluated them and concluded which was the model that performed the best. The model then was saved.
  2.  Then I created and environment and installed the libraries I will be using: `pipenv install flask gunicorn tensorflow pillow`
  3. Then I run the environment with: `pipenv shell`
  4. I uploaded one of the images to imgur: https://i.imgur.com/6n71Nae.jpg
- 5. I created test.py and classify.py
- 6. Then I tested the model. Run classify.py in the environment and test.py in another terminal. Works.
- 7. Next step is to containerize with Docker. I created a Dockerfile and build the container with: docker build -t ml-zoomcamp-maps .
- 8. Run the container with: `docker run -it --rm  ml-zoomcamp-maps` and test running python3 test.py 
+ 5. I created `test.py` and `classify.py`
+ 6. Then I tested the model. Run `classify.py` in the environment and test.py in another terminal. Works.
+ 7. Next step is to containerize with Docker. I created a Dockerfile and build the container with: `docker build -t ml-zoomcamp-maps .`
+ 8. Run the container with: `docker run -p 9696:9696 -it --rm  ml-zoomcamp-maps` and test running `python3 test.py` 
 
+### Improvements
 
- 7. After checking that it works, I create a **docker** container `sudo docker build -t midterm_project .`. We can test it running the docker image `docker run -it --rm  midterm_project` and executing `python3 test.py`
- 8. Finally I deploy it to **AWS** with **Elastic Beanstalk**. For that I first install the library `pipenv install awsebcli --dev`, initialize EB `eb init -p docker -r eu-north-1 midterm_project` and create the service `eb create midterm-project-env`
- 9. Now we just need to test it. For that, I modified the line pointing to the url in `test.py` and run `python3 test.py`. (There is no need to change it now since the server is still running in AWS (today being 5 November 2023))
-
-### Miscelanea
-I had some problems with getting the feature names from the DictVectorizer.  
-In the course we used `dv.get_feature_names()` but I got errors on my end and I had to change to `list(dv.get_feature_names_out())`.  
-After reading it looks like it has to do with different scykit versions.  
-I also read that `get_feature_names()` is being replaced to `get_feature_names_out()` in the library so I kept it like that.  
+ I did not have the time but these would be the next improvements:
+  1. Convert the model to tf-lite and load that in the docker container, so we do not download all the tf library, which is huge
+  2. I would try to check other models that are already created and use transfer learning.
+  3. Deploy the containers with kubernertes.
 
 
