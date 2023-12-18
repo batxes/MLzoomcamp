@@ -189,3 +189,4 @@ Writing an article about something not covered in the course.
 ## [Capstone project 2](projects/#capstone-2) (optional)
 
 For those who love projects!
+
