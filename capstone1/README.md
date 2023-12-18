@@ -46,9 +46,10 @@ The model is convolutional neural network.
 
 Model can be run locally in these ways:
  1. locally:
-    1. `pipenv shell`
-    2. `gunicorn --bind 0.0.0.0:9696 classify:app` 
-    3. in another terminal: `python3 test.py`
+    1. `pipenv install flask gunicorn tensorflow pillow`
+    2. `pipenv shell`
+    3. `gunicorn --bind 0.0.0.0:9696 classify:app` 
+    4. in another terminal: `python3 test.py`
  2. Docker:
     1. `docker build -t ml-zoomcamp-maps .`
     2. `docker run -p 9696:9696 -it --rm  ml-zoomcamp-maps`
