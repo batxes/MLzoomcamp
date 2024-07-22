@@ -32,9 +32,9 @@ To Receive a certificate, one needs to finalize and submit two projects.
 ## Tools/tech used:
 
 <p align="center">
-    <img src="icons/pandas.png" width="150">
+    <img src="icons/pandas.png" width="130">
     <img src="icons/tensorflow.png" width="150">
-    <img src="icons/keras.png" width="150">
+    <img src="icons/keras.png" width="130">
     <img src="icons/flask.png" width="60">
     <img src="icons/aws.png" width="70">
     <img src="icons/Docker.png" width="100">
