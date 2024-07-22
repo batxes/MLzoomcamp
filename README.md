@@ -13,6 +13,7 @@ To Receive a certificate, one needs to finalize and submit two projects.
 - [Capstone Project](https://github.com/batxes/MLzoomcamp/tree/main/capstone1)
     - A deep learning project that classifies satellite images. The model is a Convolutional Neural Network and was containerized with Docker.
 
+
 ## Topics covered:
 ### Part 1
 1. Linear Regression
@@ -20,13 +21,26 @@ To Receive a certificate, one needs to finalize and submit two projects.
 1. Decision Trees and Ensemble Learning
 1. Python and Jupyter notebooks
 1. Numpy and Pandas
-1. Matplotlin and Seaborn
+1. Matplotlib and Seaborn
 1. Tensorflow and Keras
 ### Part 2
 1. Flask, Pipenv and Docker
 1. AWS Lambda and TensorFlow Lite
 1. Kubernetes and TensorFlow Serving
 1. Kserve
+
+## Tools/tech used:
+
+<p align="center">
+    <img src="icons/pandas.png" width="100">
+    <img src="icons/tensorflow.png" width="100">
+    <img src="icons/keras.jpg" width="50">
+    <img src="icons/flask.png" width="40">
+    <img src="icons/aws.png" width="60">
+    <img src="icons/docker.png" width="100">
+    <img src="icons/kubernetes.png" width="100">
+</p>
+
 
 *https://datatalks.club/blog/machine-learning-zoomcamp.html*
 
